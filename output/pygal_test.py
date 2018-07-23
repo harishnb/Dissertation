@@ -8,6 +8,7 @@ Created on Tue Jul 17 09:58:26 2018
 import pygal
 import math
 import pandas as pd
+from collections import defaultdict
 from pygal.style import Style
  
 from flask import Flask
@@ -79,6 +80,9 @@ def create_html_page():
         body_lines.append('</table></td>')
         
         body_lines.append('<td> </td><td></td><td align="right"> <object type="image/svg+xml" data="static/images/screen_avg_chart.svg"> Your browser does not support SVG </object></td>')
+        
+        
+        
         body_lines.append('</tr></table>')
         
 #        body_lines.append('<table><tr><td>{}</td></tr></table>'.format(avg_time_spent.describe()))
@@ -97,9 +101,9 @@ def create_html_page():
         
         
         body_lines.append('</table></td>')
-        
+        body_lines.append('<object type="image/svg+xml" data="static/images/donut.svg" align="right"> Your browser does not support SVG </object>')
         body_lines.append('<p>====================================================================================================================================================================================</p>')
-        body_lines.append('<td> </td><td></td><td> <object type="image/svg+xml" data="static/images/scatter.svg"> Your browser does not support SVG </object></td>')
+        body_lines.append('<td> </td><td></td><td> <object type="image/svg+xml" data="static/images/scatter.svg" align="right"> Your browser does not support SVG </object></td>')
         
         html.writelines(body_lines)
         html.writelines(ending_lines)
@@ -179,19 +183,58 @@ def home():
     avg_bar_chart.add('Least used screen',var_time_spent)
     avg_bar_chart.render_to_file('static/images/tf_idf_chart.svg')
     
+#====================Donut chart of the screens used==================
+    print ("===Dounut Chart==========")
+    pie_chart = pygal.Pie(width=1200,height=600,explicit_size=True,inner_radius=.2)
+    pie_chart.title = 'Time spent on each screen (in %)'
+    var_x_labels = []
+    var_data = []
+    total_values = 0
+    for idx1 in list(range(0,len(avg_time_spent))):
+        total_values = total_values + avg_time_spent.Avg_Time[idx1]
+
+#    print ("Total value===",total_values)
+    for idx1 in list(range(0,len(avg_time_spent))):
+        prcnt = round((avg_time_spent.Avg_Time[idx1]/total_values)*100,2)
+#        print ("% = ",prcnt)
+        pie_chart.add(avg_time_spent.Screen_id[idx1], prcnt)
+
+    pie_chart.render_to_file('static/images/donut.svg')
+    
+#==================================Gauge chart==========
+    gauge = pygal.SolidGauge(inner_radius=0.70)
+    percent_formatter = lambda x: '{:.10g}%'.format(x)
+    gauge.value_formatter = percent_formatter
+    
 #====scatter plot=====================================
 
     
-    xy_chart = pygal.XY(stroke=False)
+    xy_chart = pygal.XY(width=1200,height=600,explicit_size=True,stroke=False)
     xy_chart.title = 'Scatter plot of the screen ID and time spent'
-    var_temp_tuple = ()
-    var_data = []
-    for idx1 in list(range(0,len(var_full_data))):
-        var_temp_tuple = (var_full_data.ScreenName[idx1],var_full_data.ActiveTime[idx1])
-        var_data.append(var_temp_tuple)
+#    var_temp_lst = []
+    var_screen_id_dict = defaultdict(list)
+    
+    for idx in list(range(0,len(avg_time_spent))):
+#        var_screen_id_dict[avg_time_spent.Screen_id[idx]]={}
+        print (idx,"=>",avg_time_spent.Screen_id[idx])
+        for idx2 in list(range(0,len(var_full_data))):
+            if(avg_time_spent.Screen_id[idx]==var_full_data.ScreenName[idx2]):
+#                print (idx2,"count=",var_full_data.ScreenName[idx2])
+                if (idx2+1>=len(var_full_data)):
+                    continue
+                else:
+                    var_screen_id_dict[avg_time_spent.Screen_id[idx]].append(var_full_data.ScreenName[idx2+1])
+#                    print("screneid =",avg_time_spent.Screen_id[idx],"next id=",var_full_data.ScreenName[idx2+1])
+    
+    print("The next screen list stored==========")
+    print (var_screen_id_dict)
+            
+        
+         
+        
 #        var_x_labels.append(var_full_data.ScreenName[idx1])
 #        var_data.append(data_tf_idf.ActiveTime[idx1])
-    print ("===values==",var_data)   
+#    print ("===values==",var_data)   
 #    xy_chart.add('ScreenIds', var_data)
     xy_chart.add('2', [(.1, .15), (.12, .23), (.4, .3), (.6, .4), (.21, .21), (.5, .3), (.6, .8), (.7, .8)])
     xy_chart.add('3', [(.05, .01), (.13, .02), (1.5, 1.7), (1.52, 1.6), (1.8, 1.63), (1.5, 1.82), (1.7, 1.23), (2.1, 2.23), (2.3, 1.98)])
