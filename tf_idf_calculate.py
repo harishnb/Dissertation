@@ -9,7 +9,6 @@ from EPG_parser_tf_idf import var_doc_list
 import math
 import csv
 
-#var_screenId = {}
 
 
 def tf_calculation(p_screenId):
@@ -17,7 +16,7 @@ def tf_calculation(p_screenId):
     for j in (p_screenId):
         temp_res = p_screenId[j]/sum(p_screenId.values())
         tf_val = round(temp_res,4)
-        #print (j,"=",tf_val)
+        print (j,"=",tf_val)
         tf_values[j]=tf_val
 
         
@@ -47,7 +46,7 @@ def idf_calculation(p_doc_list):
     for j in master_screen_id_count:
         temp_res = round(math.log(var_total_doc/master_screen_id_count[j],10),4)
         master_screen_id_log_value[j]= temp_res
-   # print ("==masterid_log_values=",master_screen_id_log_value)
+    print (j,"==masterid_log_values=",master_screen_id_log_value)
     print 
         
         
@@ -102,7 +101,7 @@ total_doc = [];
 #total_doc.append(doc4)
 #print (len(total_doc))
 total_doc = var_doc_list
-print ("Inside second file++++++",len(total_doc))
+#print ("Inside second file++++++",len(total_doc))
 
 for x in range (len(total_doc)):
     var_screenId = {}
