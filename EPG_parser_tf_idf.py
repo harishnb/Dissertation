@@ -43,17 +43,6 @@ def store_total_time_spent():
     myCsvFile.close()
 
 
-#def store_time_spent_session():
-#    with open('time_spent_each_session.csv', 'w', newline='') as myCsvFile:
-#         csvWriter = csv.writer(myCsvFile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
-#         var_headings = ["session"]+["Time"]
-#         csvWriter.writerow(var_headings)
-#         for i in range (len(var_total_time_spent_per_session)):
-#             var_row = [i]+[var_total_time_spent_per_session[i]]
-#             csvWrite = csv.writer(myCsvFile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
-#             csvWrite.writerow(var_row)
-#    myCsvFile.close()
-
 
 def calculate_avg_time_spent():
     global var_avg_time_each_screen
@@ -73,8 +62,8 @@ def calculate_avg_time_spent():
                     var_master_count[y] = 1
 #            print (y,"=","var_avg_time_each_screen[y]",var_avg_time_each_screen[y],"=",var_screen_time_spent_per_session[i][y])
 
-    print ("master count", var_master_count)
-    print ("var_avg_time_each_screen[y]", var_avg_time_each_screen)
+#    print ("master count", var_master_count)
+#    print ("var_avg_time_each_screen[y]", var_avg_time_each_screen)
     with open('output/Avg_time_spent.csv', 'w', newline='') as myCsvFile:
         csvWriter = csv.writer(myCsvFile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
         var_headings = ["Screen_id"]+["Avg_Time"]
@@ -86,12 +75,6 @@ def calculate_avg_time_spent():
              var_row = [var_final_sorted[x][0]]+[var_final_sorted[x][1]]
              csvWrite = csv.writer(myCsvFile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
              csvWrite.writerow(var_row)
-#        for j in (var_final_sorted):
-#            var_avg_time_each_screen[j] = round((var_final_sorted[j]/var_master_count[j]),2)
-#            #print (j,"=",var_avg_time_each_screen[j])
-#            var_row = [j]+[var_avg_time_each_screen[j]]
-#            csvWrite = csv.writer(myCsvFile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
-#            csvWrite.writerow(var_row)
     myCsvFile.close()
             
 #        
